@@ -7,7 +7,7 @@ from torch.autograd import Variable
 from parsers import args
 from utils import seq_padding, subsequent_mask
 #数据的准备
-
+import re
 class PrepareData:
     def __init__(self):
         # 读取数据 并分词
@@ -33,9 +33,18 @@ class PrepareData:
         with open(path, 'r', encoding='UTF-8') as f:
             for line in f:
                 line = line.strip().split('\t')
-                #分词录入，加上分隔符
-                en.append(["BOS"] + word_tokenize(line[0].lower()) + ["EOS"])
-                cn.append(["BOS"] + word_tokenize(" ".join([w for w in line[1]])) + ["EOS"])
+
+                pattern = re.compile(r'\"(.+?)\"')
+
+                test = "".join(line)
+
+                test = pattern.findall(test)
+
+                # 分词录入，加上分隔符
+
+                en.append(["BOS"] + word_tokenize(" ".join([w for w in test[1]])) + ["EOS"])
+                cn.append(["BOS"] + word_tokenize(" ".join([w for w in test[3]])) + ["EOS"])
+
         return en, cn
 
     def build_dict(self, sentences, max_words=50000):

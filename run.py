@@ -18,7 +18,7 @@ from model.generator import Generator
 from lib.criterion import LabelSmoothing
 from lib.optimizer import NoamOpt
 from train import train
-#from evaluate import evaluate
+from model.evaluate import evaluate
 
 #这里搭载了整个模型的运行框架，
 def make_model(src_vocab, tgt_vocab, N=6, d_model=512, d_ff=2048, h=8, dropout=0.1):
@@ -58,7 +58,7 @@ def main():
         optimizer = NoamOpt(args.d_model, 1, 2000,torch.optim.Adam(model.parameters(), lr=0, betas=(0.9, 0.98), eps=1e-9))
         train(data, model, criterion, optimizer)
         print("<<<<<<< finished train")
-    '''
+
     elif args.type == "evaluate":
         if os.path.exists(args.save_file):
             model.load_state_dict(torch.load(args.save_file))
@@ -68,7 +68,7 @@ def main():
     
     else:
         print("Error: please select type within [train / evaluate]")
-    '''
+
 
 if __name__ == "__main__":
     main()
